@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UsmToolkit": {
+      "commandName": "Project",
+      "commandLineArgs": "extract \"F:\\CUSA05787\\tresgame\\content\\crimovie\\rebellis02\\en\\cs_dw009_mv.usm\" --join"
+    }
+  }
+}

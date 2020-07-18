@@ -1,0 +1,5 @@
+{
+    "VideoParameter" : "-c:v copy",
+    "AudioParameter" : "-c:a ac3 -b:a 640k -af pan='stereo|FL=FL+FC+0.5*BL+BR|FR=FR+LFE+0.5*BL+BR'",
+    "OutputFormat" : "mp4"
+}

@@ -1,0 +1,1 @@
+dotnet publish --configuration Release --framework netcoreapp3.1 --output publish /p:DebugType=None /p:DebugSymbols=false
