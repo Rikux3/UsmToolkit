@@ -89,6 +89,7 @@ namespace UsmToolkit
                 Console.WriteLine($"File: {fileName}");
                 var usmStream = new CriUsmStream(fileName);
 
+                Console.WriteLine("Demuxing...");
                 usmStream.DemultiplexStreams(new MpegStream.DemuxOptionsStruct()
                 {
                     AddHeader = false,
@@ -100,12 +101,21 @@ namespace UsmToolkit
 
                 if (Join)
                 {
+                    if (!string.IsNullOrEmpty(OutputDir) && !Directory.Exists(OutputDir))
+                        Directory.CreateDirectory(OutputDir);
+
                     JoinOutputFile(usmStream);
                 }
             }
 
             private void JoinOutputFile(CriUsmStream usmStream)
             {
+                if (!File.Exists("config.json"))
+                {
+                    Console.WriteLine("ERROR: config.json not found!");
+                    return;
+                }
+
                 var audioFormat = usmStream.FinalAudioExtension;
                 var pureFileName = Path.GetFileNameWithoutExtension(usmStream.FilePath);
 
@@ -115,24 +125,23 @@ namespace UsmToolkit
                     //need vgmstream to format that to wav
                     if (!Directory.Exists("vgmstream"))
                     {
-                        Console.WriteLine("WARNING: vgmstream folder not found!");
+                        Console.WriteLine("ERROR: vgmstream folder not found!");
+                        return;
                     }
 
+                    Console.WriteLine("adx audio detected, convert to wav...");
                     Helpers.ExecuteProcess("vgmstream/test.exe", $"\"{Path.ChangeExtension(usmStream.FilePath, usmStream.FinalAudioExtension)}\" -o \"{Path.ChangeExtension(usmStream.FilePath, "wav")}\"");
 
                     usmStream.FinalAudioExtension = ".wav";
                 }
 
-                if (!File.Exists("config.json"))
-                {
-                    Console.WriteLine("ERROR: config.json not found!");
-                    return;
-                }
 
                 Helpers.ExecuteProcess("ffmpeg", CreateFFmpegParameters(usmStream, pureFileName));
 
                 if (CleanTempFiles)
                 {
+                    Console.WriteLine($"Cleaning up temporary files from {pureFileName}");
+
                     File.Delete(Path.ChangeExtension(usmStream.FilePath, "wav"));
                     File.Delete(Path.ChangeExtension(usmStream.FilePath, "adx"));
                     File.Delete(Path.ChangeExtension(usmStream.FilePath, "hca"));
@@ -174,9 +183,10 @@ namespace UsmToolkit
                 DepsConfig conf = JsonConvert.DeserializeObject<DepsConfig>(File.ReadAllText("deps.json"));
                 WebClient client = new WebClient();
 
-                //ffmpeg
+                Console.WriteLine($"Downloading ffmpeg from {conf.FFmpeg}");
                 client.DownloadFile(conf.FFmpeg, "ffmpeg.zip");
 
+                Console.WriteLine($"Extracting ffmpeg...");
                 using (ZipArchive archive = ZipFile.OpenRead("ffmpeg.zip"))
                 {
                     var ent = archive.Entries.FirstOrDefault(x => x.Name == "ffmpeg.exe");
@@ -185,12 +195,13 @@ namespace UsmToolkit
                         ent.ExtractToFile("ffmpeg.exe", true);
                     }
                 }
-
                 File.Delete("ffmpeg.zip");
 
-                //vgmstream
+                Console.WriteLine($"Downloading vgmstream from {conf.Vgmstream}");
                 client.DownloadFile(conf.Vgmstream, "vgmstream.zip");
-                ZipFile.ExtractToDirectory("vgmstream.zip", "vgmstream");
+
+                Console.WriteLine("Extracting vgmstream...");
+                ZipFile.ExtractToDirectory("vgmstream.zip", "vgmstream", true);
                 File.Delete("vgmstream.zip");
 
                 return 0;
