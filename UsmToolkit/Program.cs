@@ -60,7 +60,10 @@ namespace UsmToolkit
             public string InputPath { get; set; }
 
             [Option(CommandOptionType.NoValue, Description = "Join files after extraction.", ShortName = "j", LongName = "join")]
-            public bool JoinOutput { get; set; }
+            public bool Join { get; set; }
+
+            [Option(CommandOptionType.SingleValue, Description = "Specify output directory.", ShortName = "o", LongName = "output-dir")]
+            public string OutputDir { get; set; }
 
             [Option(CommandOptionType.NoValue, Description = "Remove temporary m2v and audio after joining.", ShortName = "c", LongName = "clean")]
             public bool CleanTempFiles { get; set; }
@@ -95,7 +98,7 @@ namespace UsmToolkit
                     SplitAudioStreams = false
                 });
 
-                if (JoinOutput)
+                if (Join)
                 {
                     JoinOutputFile(usmStream);
                 }
@@ -152,7 +155,7 @@ namespace UsmToolkit
                 if (usmStream.HasAudio)
                     sb.Append($"{conf.AudioParameter} ");
 
-                sb.Append($"{pureFileName}.{conf.OutputFormat}");
+                sb.Append($"\"{Path.Combine(OutputDir ?? string.Empty, $"{pureFileName}.{conf.OutputFormat}")}\"");
 
                 return sb.ToString();
             }
