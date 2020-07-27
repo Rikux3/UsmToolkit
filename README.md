@@ -13,14 +13,14 @@ After that, it's as easy as it can get.
 UsmToolkit extract <file/folder>
 ```
 
-### Joining (aka converting)
+### Converting
 ```
-UsmToolkit extract <file/folder> --join
+UsmToolkit convert <file/folder>
 ```
 
-For more informations run `UsmToolkit extract -h`.
+For more informations run `UsmToolkit extract -h` and `UsmToolkit convert -h`.
 
-## Custom join parameter
+## Custom conversion parameter
 
 You should find `config.json` in the folder of the executable. With it, you can completly customize how the extracted file is processed by ffmpeg.
 The default configuration ships as follows:
