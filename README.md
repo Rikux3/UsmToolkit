@@ -26,7 +26,9 @@ You should find `config.json` in the folder of the executable. With it, you can 
 The default configuration ships as follows:
 
 * Video: Will be copied
-* Audio: Re-encoded as AC3 at 640kb/s. If the file has 6 channels, they will be merged to 2
+* Audio: Re-encoded as AC3 at 640kb/s. If the file has 6 channels, they will be merged into stereo
+    * Left channel: CH1, CH3, CH5 50% volume, CH6
+    * Right channel: CH2, CH4, CH5 50% volume, CH6
 * Output is a MP4 file
 
 You can change these settings to your likings, it's standard ffmpeg syntax.
