@@ -1,4 +1,4 @@
 {
-    "Vgmstream" : "https://github.com/losnoco/vgmstream/releases/latest/download/test.zip",
-    "FFmpeg" : "https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip"
+    "Vgmstream" : "https://github.com/vgmstream/vgmstream/releases/download/r1702/vgmstream-win.zip",
+    "FFmpeg" : "https://web.archive.org/web/20200916110418if_/https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip"
 }
